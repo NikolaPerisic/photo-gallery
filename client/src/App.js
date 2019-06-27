@@ -11,7 +11,8 @@ class App extends React.Component {
         isLoaded: false,
         items: [],
         error: null,
-        search: ""
+        search: "",
+        btnHighlight: []
     };
     componentDidMount() {
         axios
@@ -26,8 +27,22 @@ class App extends React.Component {
                 this.setState({ error: error });
             });
     }
+    handleReleatedSearch = e => {
+        let reletedBtns = [...this.state.btnHighlight];
+        if (!reletedBtns.includes(e)) {
+            reletedBtns.push(e);
+        }
+        console.log(this.state.btnHighlight);
+        this.setState(
+            {
+                search: e,
+                btnHighlight: reletedBtns
+            },
+            this.handleSearch
+        );
+    };
     handleSearch = e => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         const search = this.state.search.toLowerCase();
         let filterPics = [];
         this.state.items.pictures.map(el => {
@@ -65,7 +80,11 @@ class App extends React.Component {
                     {this.state.isLoaded ? (
                         <React.Fragment>
                             <Main count={this.state.items.pictures.length} />
-                            <ReleatedSearch tags={this.state.items.pictures} />
+                            <ReleatedSearch
+                                btnHighlight={this.state.btnHighlight}
+                                releatedSearch={this.handleReleatedSearch}
+                                tags={this.state.items.pictures}
+                            />
                             <Gallery imgs={this.state.items.pictures} />
                         </React.Fragment>
                     ) : null}

@@ -12,7 +12,8 @@ class App extends React.Component {
         items: [],
         error: null,
         search: "",
-        btnHighlight: []
+        btnHighlight: [],
+        galleryTitle: "All Pictures"
     };
     componentDidMount() {
         axios
@@ -28,23 +29,25 @@ class App extends React.Component {
             });
     }
     handleReleatedSearch = e => {
-        let reletedBtns = [...this.state.btnHighlight];
-        if (!reletedBtns.includes(e)) {
-            reletedBtns.push(e);
+        let releatedBtns = [...this.state.btnHighlight];
+        if (!releatedBtns.includes(e)) {
+            releatedBtns.push(e);
         }
         console.log(this.state.btnHighlight);
         this.setState(
             {
-                search: e,
-                btnHighlight: reletedBtns
+                btnHighlight: releatedBtns
             },
-            this.handleSearch
+            this.filterSearchResults(e)
         );
     };
-    handleSearch = e => {
-        if (e) e.preventDefault();
-        const search = this.state.search.toLowerCase();
-        let filterPics = [];
+    handleSubmitSearch = e => {
+        e.preventDefault();
+        this.filterSearchResults();
+    };
+    filterSearchResults = term => {
+        const search = term ? term : this.state.search.toLowerCase();
+        const filterPics = [];
         this.state.items.pictures.map(el => {
             if (el.author.toLowerCase().includes(search)) {
                 filterPics.push(el);
@@ -62,8 +65,21 @@ class App extends React.Component {
         });
         let updateItems = { ...this.state.items };
         updateItems.pictures = filterPics;
+        this.handleTitleChange(term);
         this.setState({ items: updateItems });
-        console.log(this.state);
+    };
+    handleTitleChange = term => {
+        let title = "";
+        if (!term) {
+            title = `${this.state.search.charAt(0).toUpperCase() +
+                this.state.search.slice(1)} pictures`;
+        } else if (term && !this.state.search) {
+            title = `${term.charAt(0).toUpperCase() + term.slice(1)} pictures`;
+        } else {
+            title = `${this.state.search.charAt(0).toUpperCase() +
+                this.state.search.slice(1)} & ${term} pictures`;
+        }
+        this.setState({ galleryTitle: title });
     };
     handleInputChange = event => {
         this.setState({ search: event.target.value });
@@ -74,12 +90,15 @@ class App extends React.Component {
                 <Header
                     handleInputChange={this.handleInputChange}
                     userInput={this.state.search}
-                    inputSearch={this.handleSearch}
+                    inputSearch={this.handleSubmitSearch}
                 />
                 <div className="main-content">
                     {this.state.isLoaded ? (
                         <React.Fragment>
-                            <Main count={this.state.items.pictures.length} />
+                            <Main
+                                count={this.state.items.pictures.length}
+                                title={this.state.galleryTitle}
+                            />
                             <ReleatedSearch
                                 btnHighlight={this.state.btnHighlight}
                                 releatedSearch={this.handleReleatedSearch}

@@ -5,7 +5,7 @@ import rectangle from "../assets/Rectangle.svg";
 const Main = props => {
     return (
         <div className="main-wrapper">
-            <h1>Dubai Pictures</h1>
+            <h1>{props.title}</h1>
             <img src={rectangle} alt="rectangle" />
             <p>{props.count} Pictures of Dubai</p>
             <hr />

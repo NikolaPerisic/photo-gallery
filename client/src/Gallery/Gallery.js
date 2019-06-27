@@ -20,7 +20,7 @@ const Gallery = props => {
                         onMouseLeave={handleMouseLeave}
                     >
                         {show.hover && show.name === el.name ? (
-                            <div>
+                            <div className="img-captions">
                                 <p>{el.name}</p>
                                 <p>{el.author}</p>
                             </div>

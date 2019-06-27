@@ -10,7 +10,7 @@ const Header = props => {
                 <img src={logo} alt="logo" className="logo-img" />
             </div>
             <div className="search-box">
-                <form>
+                <form onSubmit={props.inputSearch}>
                     <label htmlFor="search" />
 
                     <input
@@ -18,10 +18,12 @@ const Header = props => {
                         name="search"
                         placeholder="search..."
                         className="search"
+                        value={props.userInput}
+                        onChange={props.handleInputChange}
                     />
-                    <span className="search-icon">
+                    <button className="search-btn">
                         <img src={SearchIcon} alt="search icon" />
-                    </span>
+                    </button>
                 </form>
             </div>
         </div>

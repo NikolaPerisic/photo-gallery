@@ -10,7 +10,8 @@ class App extends React.Component {
     state = {
         isLoaded: false,
         items: [],
-        error: null
+        error: null,
+        search: ""
     };
     componentDidMount() {
         axios
@@ -25,10 +26,41 @@ class App extends React.Component {
                 this.setState({ error: error });
             });
     }
+    handleSearch = e => {
+        e.preventDefault();
+        const search = this.state.search.toLowerCase();
+        let filterPics = [];
+        this.state.items.pictures.map(el => {
+            if (el.author.toLowerCase().includes(search)) {
+                filterPics.push(el);
+            } else if (el.name.toLowerCase().includes(search)) {
+                filterPics.push(el);
+            } else if (el.tags) {
+                for (let item of el.tags) {
+                    if (item === search) {
+                        filterPics.push(el);
+                        break;
+                    }
+                }
+            }
+            return null;
+        });
+        let updateItems = { ...this.state.items };
+        updateItems.pictures = filterPics;
+        this.setState({ items: updateItems });
+        console.log(this.state);
+    };
+    handleInputChange = event => {
+        this.setState({ search: event.target.value });
+    };
     render() {
         return (
             <div className="App">
-                <Header />
+                <Header
+                    handleInputChange={this.handleInputChange}
+                    userInput={this.state.search}
+                    inputSearch={this.handleSearch}
+                />
                 <div className="main-content">
                     {this.state.isLoaded ? (
                         <React.Fragment>

@@ -16,24 +16,31 @@ class App extends React.Component {
         galleryTitle: "All Pictures"
     };
     componentDidMount() {
+        this.fetchDataFromServer();
+    }
+    fetchDataFromServer = () => {
         axios
             .get("http://localhost:5000/pictures")
             .then(response => {
+                let previousSearch = this.state.search;
                 this.setState({
                     isLoaded: true,
-                    items: response.data
+                    items: response.data,
+                    search: previousSearch
                 });
+                if (this.state.search) {
+                    this.filterSearchResults();
+                }
             })
             .catch(error => {
                 this.setState({ error: error });
             });
-    }
+    };
     handleReleatedSearch = e => {
         let releatedBtns = [...this.state.btnHighlight];
         if (!releatedBtns.includes(e)) {
             releatedBtns.push(e);
         }
-        console.log(this.state.btnHighlight);
         this.setState(
             {
                 btnHighlight: releatedBtns
@@ -43,7 +50,7 @@ class App extends React.Component {
     };
     handleSubmitSearch = e => {
         e.preventDefault();
-        this.filterSearchResults();
+        this.fetchDataFromServer();
     };
     filterSearchResults = term => {
         const search = term ? term : this.state.search.toLowerCase();

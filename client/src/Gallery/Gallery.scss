@@ -1,0 +1,14 @@
+.gallery {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 10px;
+    grid-auto-flow: dense;
+    img {
+        height: auto;
+        max-width: 100%;
+        border-radius: 5px;
+
+        // object-fit: scale-down;
+    }
+}

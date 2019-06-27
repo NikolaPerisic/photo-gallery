@@ -20,7 +20,6 @@ class App extends React.Component {
                     isLoaded: true,
                     items: response.data
                 });
-                console.log(this.state);
             })
             .catch(error => {
                 this.setState({ error: error });
@@ -33,9 +32,9 @@ class App extends React.Component {
                 <div className="main-content">
                     {this.state.isLoaded ? (
                         <React.Fragment>
-                            <Main />
+                            <Main count={this.state.items.pictures.length} />
                             <ReleatedSearch tags={this.state.items.pictures} />
-                            <Gallery />
+                            <Gallery imgs={this.state.items.pictures} />
                         </React.Fragment>
                     ) : null}
                 </div>

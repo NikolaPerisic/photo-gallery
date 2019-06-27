@@ -3,11 +3,14 @@ import "./App.scss";
 import axios from "axios";
 import Header from "./Header/Header";
 import Gallery from "./Gallery/Gallery";
+import Main from "./Main/Main";
+import ReleatedSearch from "./ReleatedSearch/ReleatedSearch";
 
 class App extends React.Component {
     state = {
         isLoaded: false,
-        items: []
+        items: [],
+        error: null
     };
     componentDidMount() {
         axios
@@ -20,14 +23,22 @@ class App extends React.Component {
                 console.log(this.state);
             })
             .catch(error => {
-                console.log(error);
+                this.setState({ error: error });
             });
     }
     render() {
         return (
             <div className="App">
                 <Header />
-                <Gallery />
+                <div className="main-content">
+                    {this.state.isLoaded ? (
+                        <React.Fragment>
+                            <Main />
+                            <ReleatedSearch tags={this.state.items.pictures} />
+                            <Gallery />
+                        </React.Fragment>
+                    ) : null}
+                </div>
             </div>
         );
     }

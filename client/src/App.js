@@ -1,10 +1,12 @@
 import React from "react";
 import "./App.scss";
 import axios from "axios";
+import { Route, Switch } from "react-router-dom";
 import Header from "./Header/Header";
 import Gallery from "./Gallery/Gallery";
 import Main from "./Main/Main";
 import ReleatedSearch from "./ReleatedSearch/ReleatedSearch";
+import Details from "./Details/Details";
 
 class App extends React.Component {
     state = {
@@ -101,18 +103,44 @@ class App extends React.Component {
                 />
                 <div className="main-content">
                     {this.state.isLoaded ? (
-                        <React.Fragment>
-                            <Main
-                                count={this.state.items.pictures.length}
-                                title={this.state.galleryTitle}
+                        <Switch>
+                            <Route
+                                exact
+                                path="/"
+                                render={props => (
+                                    <React.Fragment>
+                                        <Main
+                                            count={
+                                                this.state.items.pictures.length
+                                            }
+                                            title={this.state.galleryTitle}
+                                        />
+                                        <ReleatedSearch
+                                            btnHighlight={
+                                                this.state.btnHighlight
+                                            }
+                                            releatedSearch={
+                                                this.handleReleatedSearch
+                                            }
+                                            tags={this.state.items.pictures}
+                                        />
+                                        <Gallery
+                                            {...props}
+                                            imgs={this.state.items.pictures}
+                                        />
+                                    </React.Fragment>
+                                )}
                             />
-                            <ReleatedSearch
-                                btnHighlight={this.state.btnHighlight}
-                                releatedSearch={this.handleReleatedSearch}
-                                tags={this.state.items.pictures}
+                            <Route
+                                path="/:id"
+                                render={props => (
+                                    <Details
+                                        {...props}
+                                        data={this.state.items.pictures}
+                                    />
+                                )}
                             />
-                            <Gallery imgs={this.state.items.pictures} />
-                        </React.Fragment>
+                        </Switch>
                     ) : null}
                 </div>
             </div>

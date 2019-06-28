@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./Gallery.scss";
 
 const Gallery = props => {
@@ -13,23 +14,24 @@ const Gallery = props => {
         <div className="gallery">
             {props.imgs.map(el => {
                 return (
-                    <div
-                        className="img-wrap"
-                        key={el.name}
-                        onMouseEnter={() => handleMouseEnter(el.name)}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        {show.hover && show.name === el.name ? (
-                            <div className="img-captions">
-                                <p>{el.name}</p>
-                                <p>{el.author}</p>
-                            </div>
-                        ) : null}
-                        <img
-                            src={`http://localhost:5000${el.uri}`}
-                            alt={el.name}
-                        />
-                    </div>
+                    <Link to={`${el.uri}`} key={el.name}>
+                        <div
+                            className="img-wrap"
+                            onMouseEnter={() => handleMouseEnter(el.name)}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            {show.hover && show.name === el.name ? (
+                                <div className="img-captions">
+                                    <p>{el.name}</p>
+                                    <p>{el.author}</p>
+                                </div>
+                            ) : null}
+                            <img
+                                src={`http://localhost:5000${el.uri}`}
+                                alt={el.name}
+                            />
+                        </div>
+                    </Link>
                 );
             })}
         </div>

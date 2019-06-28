@@ -2,18 +2,27 @@ import React from "react";
 import "./Details.scss";
 
 const Details = props => {
-    console.log(props.data);
+    let currentItem = null;
+    props.data.map(el => {
+        if (el.uri === props.location.pathname) {
+            currentItem = el;
+        }
+        return currentItem;
+    });
+    const goBack = () => {
+        return props.history.goBack();
+    };
     return (
         <div className="details-wrapper">
             <div className="details-image">
                 <img
-                    src={`http://localhost:5000${props.data[0].uri}`}
-                    alt="somepics"
+                    src={`http://localhost:5000${currentItem.uri}`}
+                    alt={currentItem.name}
                 />
             </div>
             <div className="details-info">
                 <div className="back-btn">
-                    <button>Back To Results</button>
+                    <button onClick={goBack}>Back To Results</button>
                 </div>
                 <div className="details-author">
                     <div className="avatar-div">
@@ -23,34 +32,31 @@ const Details = props => {
                         />
                     </div>
                     <div className="author-contact">
-                        <p>author name</p>
+                        <p>{currentItem.author}</p>
                         <button>Follow</button>
                     </div>
                 </div>
                 <div className="details-imageinfo">
-                    <h3>Image Title</h3>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.{" "}
-                    </p>
+                    <h3>{currentItem.name}</h3>
+                    <p>{currentItem.description}</p>
                 </div>
                 <div className="details-tags">
-                    <button>tags 1</button>
-                    <button>tags 2</button>
+                    {currentItem.tags.map((el, i) => {
+                        return <button key={i}>{el}</button>;
+                    })}
                 </div>
                 <hr />
                 <div className="details-pricing">
                     <div className="price-small">
-                        <p>$20</p>
+                        <p>${currentItem.price.small}</p>
                         <span>Small</span>
                     </div>
                     <div className="price-medium">
-                        <p>$50</p>
+                        <p>${currentItem.price.medium}</p>
                         <span>Medium</span>
                     </div>
                     <div className="price-large">
-                        <p>$100</p>
+                        <p>${currentItem.price.large}</p>
                         <span>Large</span>
                     </div>
                 </div>
@@ -58,7 +64,9 @@ const Details = props => {
                     <h3>Use this image exclusively for:</h3>
                     <div className="details-market">
                         <p>Market Freeze</p>
-                        <p className="market-price">$300</p>
+                        <p className="market-price">
+                            ${currentItem.exclusive.price}
+                        </p>
                     </div>
                     <p className="text-licencing">
                         Protect your work by licencing the exclusive rights to

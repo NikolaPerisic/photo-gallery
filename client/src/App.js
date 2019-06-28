@@ -9,6 +9,7 @@ import ReleatedSearch from "./ReleatedSearch/ReleatedSearch";
 import Details from "./Details/Details";
 
 class App extends React.Component {
+    _isMounted = false;
     state = {
         isLoaded: false,
         items: [],
@@ -18,20 +19,26 @@ class App extends React.Component {
         galleryTitle: "All Pictures"
     };
     componentDidMount() {
+        this._isMounted = true;
         this.fetchDataFromServer();
+    }
+    componentWillUnmount() {
+        this._isMounted = false;
     }
     fetchDataFromServer = () => {
         axios
             .get("http://localhost:5000/pictures")
             .then(response => {
-                let previousSearch = this.state.search;
-                this.setState({
-                    isLoaded: true,
-                    items: response.data,
-                    search: previousSearch
-                });
-                if (this.state.search) {
-                    this.filterSearchResults();
+                if (this._isMounted) {
+                    let previousSearch = this.state.search;
+                    this.setState({
+                        isLoaded: true,
+                        items: response.data,
+                        search: previousSearch
+                    });
+                    if (this.state.search) {
+                        this.filterSearchResults();
+                    }
                 }
             })
             .catch(error => {
@@ -112,20 +119,22 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <Header
-                    handleInputChange={this.handleInputChange}
-                    userInput={this.state.search}
-                    inputSearch={this.handleSubmitSearch}
-                    tagSearch={this.handleTagFilteredSearch}
-                />
-                <div className="main-content">
-                    {this.state.isLoaded ? (
-                        <Switch>
-                            <Route
-                                exact
-                                path="/"
-                                render={props => (
-                                    <React.Fragment>
+                {this.state.isLoaded ? (
+                    <Switch>
+                        <Route
+                            exact
+                            path="/"
+                            render={props => (
+                                <React.Fragment>
+                                    <Header
+                                        handleInputChange={
+                                            this.handleInputChange
+                                        }
+                                        userInput={this.state.search}
+                                        inputSearch={this.handleSubmitSearch}
+                                        tagSearch={this.handleTagFilteredSearch}
+                                    />
+                                    <div className="main-content">
                                         <Main
                                             count={
                                                 this.state.items.pictures.length
@@ -143,27 +152,39 @@ class App extends React.Component {
                                             {...props}
                                             imgs={this.state.items.pictures}
                                         />
-                                    </React.Fragment>
-                                )}
-                            />
-                            <Route
-                                path="/:id"
-                                render={props => (
-                                    <Details
-                                        {...props}
-                                        data={this.state.items.pictures}
-                                        filterByAuthor={
-                                            this.handleAuthorFilteredSearch
+                                    </div>
+                                </React.Fragment>
+                            )}
+                        />
+                        <Route
+                            path="/:id"
+                            render={props => (
+                                <React.Fragment>
+                                    <Header
+                                        handleInputChange={
+                                            this.handleInputChange
                                         }
-                                        filterByTag={
-                                            this.handleTagFilteredSearch
-                                        }
+                                        userInput={this.state.search}
+                                        inputSearch={this.handleSubmitSearch}
+                                        tagSearch={this.handleTagFilteredSearch}
                                     />
-                                )}
-                            />
-                        </Switch>
-                    ) : null}
-                </div>
+                                    <div className="main-content">
+                                        <Details
+                                            {...props}
+                                            data={this.state.items.pictures}
+                                            filterByAuthor={
+                                                this.handleAuthorFilteredSearch
+                                            }
+                                            filterByTag={
+                                                this.handleTagFilteredSearch
+                                            }
+                                        />
+                                    </div>
+                                </React.Fragment>
+                            )}
+                        />
+                    </Switch>
+                ) : null}
             </div>
         );
     }

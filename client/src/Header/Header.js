@@ -11,6 +11,11 @@ const Header = props => {
         }
         return null;
     };
+    const handleSubmitFromPage = e => {
+        e.preventDefault();
+        props.tagSearch(props.userInput);
+        props.history.push("/");
+    };
     return (
         <div className="header">
             <div>
@@ -22,7 +27,13 @@ const Header = props => {
                 />
             </div>
             <div className="search-box">
-                <form onSubmit={props.inputSearch}>
+                <form
+                    onSubmit={
+                        props.match.isExact
+                            ? props.inputSearch
+                            : e => handleSubmitFromPage(e)
+                    }
+                >
                     <label htmlFor="search" />
 
                     <input

@@ -16,9 +16,7 @@ const ReleatedSearch = props => {
             <p>Releated Searches:</p>
             <div className="btn-wrapper">
                 {tags.map(el => {
-                    let btnSelected = props.btnHighlight.includes(el)
-                        ? true
-                        : false;
+                    let btnSelected = props.items.includes(el) ? true : false;
                     return (
                         <button
                             className={

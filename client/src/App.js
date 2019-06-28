@@ -14,7 +14,7 @@ class App extends React.Component {
         items: [],
         error: null,
         search: "",
-        btnHighlight: [],
+        tags: [],
         galleryTitle: "All Pictures"
     };
     componentDidMount() {
@@ -39,19 +39,35 @@ class App extends React.Component {
             });
     };
     handleReleatedSearch = e => {
-        let releatedBtns = [...this.state.btnHighlight];
+        let releatedBtns = [...this.state.tags];
         if (!releatedBtns.includes(e)) {
             releatedBtns.push(e);
         }
         this.setState(
             {
-                btnHighlight: releatedBtns
+                tags: releatedBtns
             },
             this.filterSearchResults(e)
         );
     };
     handleSubmitSearch = e => {
         e.preventDefault();
+        this.fetchDataFromServer();
+    };
+    handleAuthorFilteredSearch = author => {
+        this.setState({
+            search: author,
+            tags: [],
+            galleryTitle: "All Pictures"
+        });
+        this.fetchDataFromServer();
+    };
+    handleTagFilteredSearch = tag => {
+        this.setState({
+            search: tag,
+            tags: [],
+            galleryTitle: "All Pictures"
+        });
         this.fetchDataFromServer();
     };
     filterSearchResults = term => {
@@ -100,6 +116,7 @@ class App extends React.Component {
                     handleInputChange={this.handleInputChange}
                     userInput={this.state.search}
                     inputSearch={this.handleSubmitSearch}
+                    tagSearch={this.handleTagFilteredSearch}
                 />
                 <div className="main-content">
                     {this.state.isLoaded ? (
@@ -116,9 +133,7 @@ class App extends React.Component {
                                             title={this.state.galleryTitle}
                                         />
                                         <ReleatedSearch
-                                            btnHighlight={
-                                                this.state.btnHighlight
-                                            }
+                                            items={this.state.tags}
                                             releatedSearch={
                                                 this.handleReleatedSearch
                                             }
@@ -137,6 +152,12 @@ class App extends React.Component {
                                     <Details
                                         {...props}
                                         data={this.state.items.pictures}
+                                        filterByAuthor={
+                                            this.handleAuthorFilteredSearch
+                                        }
+                                        filterByTag={
+                                            this.handleTagFilteredSearch
+                                        }
                                     />
                                 )}
                             />

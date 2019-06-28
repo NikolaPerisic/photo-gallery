@@ -12,6 +12,13 @@ const Details = props => {
     const goBack = () => {
         return props.history.goBack();
     };
+    const filterResults = (author, tag) => {
+        if (author) props.filterByAuthor(currentItem.author);
+        if (tag) props.filterByTag(tag);
+        setTimeout(() => {
+            props.history.push("/");
+        }, 200);
+    };
     return (
         <div className="details-wrapper">
             <div className="details-image">
@@ -32,7 +39,13 @@ const Details = props => {
                         />
                     </div>
                     <div className="author-contact">
-                        <p>{currentItem.author}</p>
+                        <p
+                            onClick={() =>
+                                filterResults(currentItem.author, null)
+                            }
+                        >
+                            {currentItem.author}
+                        </p>
                         <button>Follow</button>
                     </div>
                 </div>
@@ -42,7 +55,14 @@ const Details = props => {
                 </div>
                 <div className="details-tags">
                     {currentItem.tags.map((el, i) => {
-                        return <button key={i}>{el}</button>;
+                        return (
+                            <button
+                                onClick={() => filterResults(null, el)}
+                                key={i}
+                            >
+                                {el}
+                            </button>
+                        );
                     })}
                 </div>
                 <hr />

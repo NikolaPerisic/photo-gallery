@@ -1,25 +1,25 @@
 .releated-btn {
-    border-radius: 8px;
-    border: 1px solid rgb(151, 151, 151);
-    height: 44px;
-    min-width: 84px;
-    outline: none;
-    cursor: pointer;
-    margin: 0.2rem;
-    color: inherit;
+  border-radius: 8px;
+  border: 1px solid rgb(151, 151, 151);
+  height: 44px;
+  min-width: 84px;
+  outline: none;
+  cursor: pointer;
+  margin: 0.2rem;
+  color: inherit;
 }
 .btn-wrapper {
-    display: flex;
-    overflow-x: auto;
+  display: flex;
+  overflow-x: auto;
 }
 .btn-wrapper::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 .highlight {
-    background-color: lightcyan;
+  background-color: lightcyan;
 }
 @media screen and (max-width: 768px) {
-    .releated-wrapper p {
-        padding-left: 1rem;
-    }
+  .releated-wrapper p {
+    padding-left: 1rem;
+  }
 }

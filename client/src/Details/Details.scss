@@ -26,6 +26,7 @@
     display: flex;
     cursor: pointer;
     outline: none;
+    background-color: transparent;
   }
   button:before {
     content: "\21B5";
@@ -81,6 +82,7 @@ h3 {
     outline: none;
     cursor: pointer;
     margin: 0.2rem;
+    background-color: transparent;
     color: inherit;
     transition: all 0.3s ease-out;
   }

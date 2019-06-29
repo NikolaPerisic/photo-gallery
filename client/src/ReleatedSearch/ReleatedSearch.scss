@@ -7,10 +7,11 @@
   cursor: pointer;
   margin: 0.2rem;
   color: inherit;
+  background-color: transparent;
 }
 .btn-wrapper {
   display: flex;
-  overflow-x: auto;
+  overflow: auto;
 }
 .btn-wrapper::-webkit-scrollbar {
   display: none;

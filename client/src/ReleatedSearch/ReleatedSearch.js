@@ -12,7 +12,7 @@ const ReleatedSearch = props => {
         });
     });
     return (
-        <div>
+        <div className="releated-wrapper">
             <p>Releated Searches:</p>
             <div className="btn-wrapper">
                 {tags.map(el => {

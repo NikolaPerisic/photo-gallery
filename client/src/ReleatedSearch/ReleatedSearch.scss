@@ -18,3 +18,8 @@
 .highlight {
     background-color: lightcyan;
 }
+@media screen and (max-width: 768px) {
+    .releated-wrapper p {
+        padding-left: 1rem;
+    }
+}

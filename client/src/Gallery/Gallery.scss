@@ -10,7 +10,6 @@
         border-radius: 5px;
         transition: all 0.4s ease-in-out;
         opacity: 0.7;
-        // object-fit: scale-down;
     }
     .img-wrap:nth-child(2) {
         grid-column: span 2;
@@ -54,6 +53,11 @@
     }
 }
 @media screen and (max-width: 600px) {
+    .gallery {
+        img {
+            border-radius: 0;
+        }
+    }
     .img-wrap {
         grid-column: span 2;
     }

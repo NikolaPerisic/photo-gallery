@@ -12,3 +12,8 @@
         border: 1px solid rgba(0, 0, 0, 0.1);
     }
 }
+@media screen and (max-width: 768px) {
+    .main-wrapper {
+        padding-left: 1rem;
+    }
+}

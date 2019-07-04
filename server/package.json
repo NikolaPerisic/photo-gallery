@@ -1,9 +1,0 @@
-{
-  "name": "api-server",
-  "dependencies": {
-    "express": "^4.17.1"
-  },
-  "scripts": {
-    "start-server": "node index.js"
-  }
-}

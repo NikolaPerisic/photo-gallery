@@ -11,7 +11,7 @@ const Main = props => {
     <div className="main-wrapper">
       <h1>{props.title}</h1>
       <img src={rectangle} alt="rectangle" />
-      <p>{props.count} Pictures of Dubai</p>
+      <p>{props.count} Pictures</p>
       <hr />
     </div>
   );

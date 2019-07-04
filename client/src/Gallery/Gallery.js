@@ -17,12 +17,12 @@ const Gallery = props => {
   const handleMouseLeave = () => {
     setShow({ hover: false, name: "" });
   };
-
+  console.log(props.imgs);
   return (
     <div className="gallery">
       {props.imgs.map(el => {
         return (
-          <Link to={`${el.uri}`} key={el.name}>
+          <Link to={`${el.id}`} key={el.id}>
             <div
               className="img-wrap"
               onMouseEnter={() => handleMouseEnter(el.name)}
@@ -30,11 +30,11 @@ const Gallery = props => {
             >
               {show.hover && show.name === el.name ? (
                 <div className="img-captions">
-                  <p>{el.name}</p>
-                  <p>{el.author}</p>
+                  <p>{el.alt_description}</p>
+                  <p>{el.user.first_name}</p>
                 </div>
               ) : null}
-              <img src={`http://localhost:5000${el.uri}`} alt={el.name} />
+              <img src={el.urls.small} alt={el.alt_description} />
             </div>
           </Link>
         );

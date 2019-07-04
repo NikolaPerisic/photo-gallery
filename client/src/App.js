@@ -40,8 +40,13 @@ class App extends React.Component {
    */
   fetchDataFromServer = () => {
     axios
-      .get("http://localhost:5000/pictures")
+      .get(
+        `https://api.unsplash.com/photos/?client_id=${
+          process.env.REACT_APP_KEY
+        }`
+      )
       .then(response => {
+        console.log(response.data);
         if (this._isMounted) {
           let previousSearch = this.state.search;
           this.setState({
@@ -169,7 +174,7 @@ class App extends React.Component {
                   />
                   <div className="main-content">
                     <Main
-                      count={this.state.items.pictures.length}
+                      count={this.state.items.length}
                       title={this.state.galleryTitle}
                     />
                     <ReleatedSearch
@@ -177,7 +182,7 @@ class App extends React.Component {
                       releatedSearch={this.handleReleatedSearch}
                       tags={this.state.items.pictures}
                     />
-                    <Gallery {...props} imgs={this.state.items.pictures} />
+                    <Gallery {...props} imgs={this.state.items} />
                   </div>
                 </React.Fragment>
               )}

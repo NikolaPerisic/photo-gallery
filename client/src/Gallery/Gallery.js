@@ -7,17 +7,17 @@ import "./Gallery.scss";
  * author and image name on mouse hover
  */
 const Gallery = props => {
-  const [show, setShow] = useState({ hover: false, name: "" });
+  const [show, setShow] = useState({ hover: false, id: "" });
 
   // handle mouse enter and mouse leave
-  const handleMouseEnter = name => {
-    setShow({ hover: true, name: name });
+  const handleMouseEnter = id => {
+    setShow({ hover: true, id: id });
   };
 
   const handleMouseLeave = () => {
-    setShow({ hover: false, name: "" });
+    setShow({ hover: false, id: "" });
   };
-  console.log(props.imgs);
+  // console.log(props.imgs);
   return (
     <div className="gallery">
       {props.imgs.map(el => {
@@ -25,16 +25,19 @@ const Gallery = props => {
           <Link to={`${el.id}`} key={el.id}>
             <div
               className="img-wrap"
-              onMouseEnter={() => handleMouseEnter(el.name)}
+              onMouseEnter={() => handleMouseEnter(el.id)}
               onMouseLeave={handleMouseLeave}
             >
-              {show.hover && show.name === el.name ? (
+              {show.hover && show.id === el.id ? (
                 <div className="img-captions">
-                  <p>{el.alt_description}</p>
+                  <p>{el.cover_photo.alt_description}</p>
                   <p>{el.user.first_name}</p>
                 </div>
               ) : null}
-              <img src={el.urls.small} alt={el.alt_description} />
+              <img
+                src={el.cover_photo.urls.small}
+                alt={el.cover_photo.alt_description}
+              />
             </div>
           </Link>
         );

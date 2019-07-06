@@ -41,12 +41,12 @@ class App extends React.Component {
   fetchDataFromServer = () => {
     axios
       .get(
-        `https://api.unsplash.com/photos/?client_id=${
+        `https://api.unsplash.com/search/collections?query='hong+kong'&client_id=${
           process.env.REACT_APP_KEY
         }`
       )
       .then(response => {
-        console.log(response.data);
+        console.log(response.data.results);
         if (this._isMounted) {
           let previousSearch = this.state.search;
           this.setState({
@@ -54,6 +54,7 @@ class App extends React.Component {
             items: response.data,
             search: previousSearch
           });
+
           if (this.state.search) {
             this.filterSearchResults();
           }
@@ -174,7 +175,7 @@ class App extends React.Component {
                   />
                   <div className="main-content">
                     <Main
-                      count={this.state.items.length}
+                      count={this.state.items.results.length}
                       title={this.state.galleryTitle}
                     />
                     <ReleatedSearch
@@ -182,7 +183,7 @@ class App extends React.Component {
                       releatedSearch={this.handleReleatedSearch}
                       tags={this.state.items.pictures}
                     />
-                    <Gallery {...props} imgs={this.state.items} />
+                    <Gallery {...props} imgs={this.state.items.results} />
                   </div>
                 </React.Fragment>
               )}
@@ -200,7 +201,7 @@ class App extends React.Component {
                   <div className="main-content">
                     <Details
                       {...props}
-                      data={this.state.items.pictures}
+                      data={this.state.items.results}
                       filterByAuthor={this.handleAuthorFilteredSearch}
                       filterByTag={this.handleTagFilteredSearch}
                     />

@@ -8,12 +8,14 @@ import "./Details.scss";
 const Details = props => {
   // check if item matches uri path and fetch current item
   let currentItem = null;
+  let path = props.location.pathname.slice(1);
   props.data.map(el => {
-    if (el.uri === props.location.pathname) {
+    if (el.id === Number(path)) {
       currentItem = el;
     }
     return currentItem;
   });
+  console.log(currentItem);
   // go back to previous page with router history func
   const goBack = () => {
     return props.history.goBack();
@@ -36,8 +38,8 @@ const Details = props => {
     <div className="details-wrapper">
       <div className="details-image">
         <img
-          src={`http://localhost:5000${currentItem.uri}`}
-          alt={currentItem.name}
+          src={currentItem.cover_photo.urls.regular}
+          alt={currentItem.cover_photo.alt_description}
         />
       </div>
       <div className="details-info">
@@ -50,36 +52,36 @@ const Details = props => {
           </div>
           <div className="author-contact">
             <p onClick={() => filterResults(currentItem.author, null)}>
-              {currentItem.author}
+              {currentItem.user.first_name}
             </p>
             <button>Follow</button>
           </div>
         </div>
         <div className="details-imageinfo">
-          <h3>{currentItem.name}</h3>
+          <h3>{currentItem.cover_photo.alt_description}</h3>
           <p>{currentItem.description}</p>
         </div>
         <div className="details-tags">
-          {currentItem.tags.map((el, i) => {
+          {/* {currentItem.tags.map((el, i) => {
             return (
               <button onClick={() => filterResults(null, el)} key={i}>
                 {el}
               </button>
             );
-          })}
+          })} */}
         </div>
         <hr />
         <div className="details-pricing">
           <div className="price-small">
-            <p>${currentItem.price.small}</p>
+            <p>$30</p>
             <span>Small</span>
           </div>
           <div className="price-medium">
-            <p>${currentItem.price.medium}</p>
+            <p>$50</p>
             <span>Medium</span>
           </div>
           <div className="price-large">
-            <p>${currentItem.price.large}</p>
+            <p>$100</p>
             <span>Large</span>
           </div>
         </div>
@@ -87,7 +89,7 @@ const Details = props => {
           <h3>Use this image exclusively for:</h3>
           <div className="details-market">
             <p>Market Freeze</p>
-            <p className="market-price">${currentItem.exclusive.price}</p>
+            <p className="market-price">$300</p>
           </div>
           <p className="text-licencing">
             Protect your work by licencing the exclusive rights to our images

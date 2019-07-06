@@ -30,14 +30,11 @@ const Gallery = props => {
             >
               {show.hover && show.id === el.id ? (
                 <div className="img-captions">
-                  <p>{el.cover_photo.alt_description}</p>
+                  <p>{el.alt_description}</p>
                   <p>{el.user.first_name}</p>
                 </div>
               ) : null}
-              <img
-                src={el.cover_photo.urls.small}
-                alt={el.cover_photo.alt_description}
-              />
+              <img src={el.urls.small} alt={el.alt_description} />
             </div>
           </Link>
         );

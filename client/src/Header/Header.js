@@ -13,8 +13,9 @@ const Header = props => {
    * router history func that is being called only
    * if user is on details page
    */
+
   const goBack = () => {
-    if (!props.match.isExact) {
+    if (props.match.url !== "/") {
       return props.history.goBack();
     }
     return null;
@@ -34,7 +35,7 @@ const Header = props => {
       <div className="search-box">
         <form
           onSubmit={
-            props.match.isExact
+            props.match.url === "/"
               ? props.inputSearch
               : e => handleSubmitFromPage(e)
           }

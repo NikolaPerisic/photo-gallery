@@ -41,12 +41,11 @@ class App extends React.Component {
   fetchDataFromServer = () => {
     axios
       .get(
-        `https://api.unsplash.com/search/collections?query='hong+kong'&client_id=${
+        `https://api.unsplash.com/search/photos?query=hong+kong&client_id=${
           process.env.REACT_APP_KEY
         }`
       )
       .then(response => {
-        console.log(response.data.results);
         if (this._isMounted) {
           let previousSearch = this.state.search;
           this.setState({
@@ -114,15 +113,17 @@ class App extends React.Component {
    */
   filterSearchResults = term => {
     const search = term ? term : this.state.search.toLowerCase();
+    console.log(search);
     const filterPics = [];
-    this.state.items.pictures.map(el => {
-      if (el.author.toLowerCase().includes(search)) {
+    console.log(this.state.items.results);
+    this.state.items.results.map(el => {
+      if (el.user.first_name.toLowerCase().includes(search)) {
         filterPics.push(el);
-      } else if (el.name.toLowerCase().includes(search)) {
+      } else if (el.description.toLowerCase().includes(search)) {
         filterPics.push(el);
       } else if (el.tags) {
         for (let item of el.tags) {
-          if (item === search) {
+          if (item.title === search) {
             filterPics.push(el);
             break;
           }
@@ -131,7 +132,7 @@ class App extends React.Component {
       return null;
     });
     let updateItems = { ...this.state.items };
-    updateItems.pictures = filterPics;
+    updateItems.results = filterPics;
     this.handleTitleChange(term);
     this.setState({ items: updateItems });
   };
@@ -181,7 +182,7 @@ class App extends React.Component {
                     <ReleatedSearch
                       items={this.state.tags}
                       releatedSearch={this.handleReleatedSearch}
-                      tags={this.state.items.pictures}
+                      tags={this.state.items.results}
                     />
                     <Gallery {...props} imgs={this.state.items.results} />
                   </div>

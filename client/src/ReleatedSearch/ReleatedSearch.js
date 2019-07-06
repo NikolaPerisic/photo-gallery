@@ -11,14 +11,13 @@ const ReleatedSearch = props => {
   if (props.tags) {
     props.tags.map(el => {
       return el.tags.map(item => {
-        if (!tags.includes(item)) {
-          return tags.push(item);
+        if (!tags.includes(item.title)) {
+          return tags.push(item.title);
         }
         return null;
       });
     });
   }
-
   return (
     <div className="releated-wrapper">
       <p>Releated Searches:</p>

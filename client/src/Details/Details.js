@@ -10,7 +10,7 @@ const Details = props => {
   let currentItem = null;
   let path = props.location.pathname.slice(1);
   props.data.map(el => {
-    if (el.id === Number(path)) {
+    if (el.id === path) {
       currentItem = el;
     }
     return currentItem;
@@ -37,10 +37,7 @@ const Details = props => {
   return (
     <div className="details-wrapper">
       <div className="details-image">
-        <img
-          src={currentItem.cover_photo.urls.regular}
-          alt={currentItem.cover_photo.alt_description}
-        />
+        <img src={currentItem.urls.regular} alt={currentItem.alt_description} />
       </div>
       <div className="details-info">
         <div className="back-btn">
@@ -58,17 +55,17 @@ const Details = props => {
           </div>
         </div>
         <div className="details-imageinfo">
-          <h3>{currentItem.cover_photo.alt_description}</h3>
+          <h3>{currentItem.alt_description}</h3>
           <p>{currentItem.description}</p>
         </div>
         <div className="details-tags">
-          {/* {currentItem.tags.map((el, i) => {
+          {currentItem.tags.map((el, i) => {
             return (
-              <button onClick={() => filterResults(null, el)} key={i}>
-                {el}
+              <button onClick={() => filterResults(null, el.title)} key={i}>
+                {el.title}
               </button>
             );
-          })} */}
+          })}
         </div>
         <hr />
         <div className="details-pricing">

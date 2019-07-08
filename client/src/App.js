@@ -7,7 +7,7 @@ import Gallery from "./Gallery/Gallery";
 import Main from "./Main/Main";
 import ReleatedSearch from "./ReleatedSearch/ReleatedSearch";
 import Details from "./Details/Details";
-
+import Spinner from "./Spinner/Spinner";
 /**
  * Since the project is small two page site, I opted out for using default state
  * management with one class based component and a couple of functional components,
@@ -21,16 +21,20 @@ class App extends React.Component {
     error: null,
     search: "",
     tags: [],
-    galleryTitle: "All Pictures"
+    galleryTitle: "All Pictures",
+    currentPage: 1,
+    loading: false
   };
 
   // on mount fetch data from server
   componentDidMount() {
     this._isMounted = true;
     this.fetchDataFromServer();
+    window.addEventListener("scroll", this.onScroll, false);
   }
 
   componentWillUnmount() {
+    window.removeEventListener("scroll", this.onScroll, false);
     this._isMounted = false;
   }
   /**
@@ -41,7 +45,7 @@ class App extends React.Component {
   fetchDataFromServer = () => {
     axios
       .get(
-        `https://api.unsplash.com/search/photos?query=hong+kong&client_id=${
+        `https://api.unsplash.com/search/photos?query=hong+kong&page=1&client_id=${
           process.env.REACT_APP_KEY
         }`
       )
@@ -50,10 +54,9 @@ class App extends React.Component {
           let previousSearch = this.state.search;
           this.setState({
             isLoaded: true,
-            items: response.data,
+            items: response.data.results,
             search: previousSearch
           });
-
           if (this.state.search) {
             this.filterSearchResults();
           }
@@ -106,7 +109,38 @@ class App extends React.Component {
     });
     this.fetchDataFromServer();
   };
-
+  // infinite scroll
+  onScroll = () => {
+    if (
+      window.scrollY + window.innerHeight >= document.body.scrollHeight &&
+      this.state.items.length &&
+      !this.state.loading
+    ) {
+      this.addContent();
+      this.setState({ loading: true });
+    }
+  };
+  addContent = () => {
+    this.setState({ currentPage: this.state.currentPage + 1 });
+    console.log("more content");
+    axios
+      .get(
+        `https://api.unsplash.com/search/photos?query=hong+kong&page=${
+          this.state.currentPage
+        }&client_id=${process.env.REACT_APP_KEY}`
+      )
+      .then(response => {
+        this.setState({
+          items: [...this.state.items].concat(response.data.results)
+        });
+        setTimeout(() => {
+          this.setState({ loading: false });
+        }, 5000);
+      })
+      .catch(error => {
+        this.setState({ error: error });
+      });
+  };
   /**
    * main filter function, if search is coming from tag, name or author filter
    * by term otherwise filter by form input
@@ -115,11 +149,14 @@ class App extends React.Component {
     const search = term ? term : this.state.search.toLowerCase();
     console.log(search);
     const filterPics = [];
-    console.log(this.state.items.results);
-    this.state.items.results.map(el => {
+    console.log(this.state.items);
+    this.state.items.map(el => {
       if (el.user.first_name.toLowerCase().includes(search)) {
         filterPics.push(el);
-      } else if (el.description.toLowerCase().includes(search)) {
+      } else if (
+        el.description &&
+        el.description.toLowerCase().includes(search)
+      ) {
         filterPics.push(el);
       } else if (el.tags) {
         for (let item of el.tags) {
@@ -132,7 +169,7 @@ class App extends React.Component {
       return null;
     });
     let updateItems = { ...this.state.items };
-    updateItems.results = filterPics;
+    updateItems = filterPics;
     this.handleTitleChange(term);
     this.setState({ items: updateItems });
   };
@@ -176,15 +213,16 @@ class App extends React.Component {
                   />
                   <div className="main-content">
                     <Main
-                      count={this.state.items.results.length}
+                      count={this.state.items.length}
                       title={this.state.galleryTitle}
                     />
                     <ReleatedSearch
                       items={this.state.tags}
                       releatedSearch={this.handleReleatedSearch}
-                      tags={this.state.items.results}
+                      tags={this.state.items}
                     />
-                    <Gallery {...props} imgs={this.state.items.results} />
+                    <Gallery {...props} imgs={this.state.items} />
+                    <Spinner loading={this.state.loading} />
                   </div>
                 </React.Fragment>
               )}
@@ -202,7 +240,7 @@ class App extends React.Component {
                   <div className="main-content">
                     <Details
                       {...props}
-                      data={this.state.items.results}
+                      data={this.state.items}
                       filterByAuthor={this.handleAuthorFilteredSearch}
                       filterByTag={this.handleTagFilteredSearch}
                     />

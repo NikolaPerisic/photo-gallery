@@ -15,7 +15,6 @@ const Details = props => {
     }
     return currentItem;
   });
-  console.log(currentItem);
   // go back to previous page with router history func
   const goBack = () => {
     return props.history.goBack();
@@ -27,14 +26,14 @@ const Details = props => {
    * data is re-fetched from server
    */
   const filterResults = (author, tag) => {
-    if (author) props.filterByAuthor(currentItem.author);
+    if (author) props.filterByAuthor(author);
     if (tag) props.filterByTag(tag);
     setTimeout(() => {
       props.history.push("/");
     }, 200);
   };
   //
-  return (
+  let itemDetails = currentItem ? (
     <div className="details-wrapper">
       <div className="details-image">
         <img src={currentItem.urls.regular} alt={currentItem.alt_description} />
@@ -48,7 +47,7 @@ const Details = props => {
             <img src="https://i.pravatar.cc/150?img=58" alt="avatar" />
           </div>
           <div className="author-contact">
-            <p onClick={() => filterResults(currentItem.author, null)}>
+            <p onClick={() => filterResults(currentItem.user.first_name, null)}>
               {currentItem.user.first_name}
             </p>
             <button>Follow</button>
@@ -99,7 +98,8 @@ const Details = props => {
         </div>
       </div>
     </div>
-  );
+  ) : null;
+  return itemDetails;
 };
 
 export default Details;

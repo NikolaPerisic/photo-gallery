@@ -22,7 +22,7 @@ const Gallery = props => {
     <div className="gallery">
       {props.imgs.map(el => {
         return (
-          <Link to={`${el.id}`} key={el.id}>
+          <Link to={`${el.id}`} key={el.id} onClick={props.leftMain}>
             <div
               className="img-wrap"
               onMouseEnter={() => handleMouseEnter(el.id)}

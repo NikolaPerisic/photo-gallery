@@ -23,7 +23,8 @@ class App extends React.Component {
     tags: [],
     galleryTitle: "All Pictures",
     currentPage: 1,
-    loading: false
+    loading: false,
+    mainPage: true
   };
 
   // on mount fetch data from server
@@ -92,35 +93,41 @@ class App extends React.Component {
 
   // seach by author, clear previous searches
   handleAuthorFilteredSearch = author => {
-    this.setState({
-      search: author,
-      tags: [],
-      galleryTitle: "All Pictures"
-    });
-    this.fetchDataFromServer();
+    this.setState(
+      {
+        search: author,
+        tags: [],
+        galleryTitle: "All Pictures"
+      },
+      this.filterSearchResults(author)
+    );
   };
 
   // search by tag, clear previous searches
   handleTagFilteredSearch = tag => {
-    this.setState({
-      search: tag,
-      tags: [],
-      galleryTitle: "All Pictures"
-    });
-    this.fetchDataFromServer();
+    this.setState(
+      {
+        search: tag,
+        tags: [],
+        galleryTitle: "All Pictures"
+      },
+      this.filterSearchResults()
+    );
   };
   // infinite scroll
   onScroll = () => {
     if (
       window.scrollY + window.innerHeight >= document.body.scrollHeight &&
       this.state.items.length &&
-      !this.state.loading
+      !this.state.loading &&
+      this.state.mainPage
     ) {
-      this.addContent();
       this.setState({ loading: true });
+      this.addContent();
     }
   };
   addContent = () => {
+    console.log(this.props);
     this.setState({ currentPage: this.state.currentPage + 1 });
     console.log("more content");
     axios
@@ -146,12 +153,13 @@ class App extends React.Component {
    * by term otherwise filter by form input
    */
   filterSearchResults = term => {
-    const search = term ? term : this.state.search.toLowerCase();
+    console.log(this.state.search);
+    let search = term ? term : this.state.search.toLowerCase();
     console.log(search);
     const filterPics = [];
     console.log(this.state.items);
     this.state.items.map(el => {
-      if (el.user.first_name.toLowerCase().includes(search)) {
+      if (el.user.first_name.toLowerCase().includes(search.toLowerCase())) {
         filterPics.push(el);
       } else if (
         el.description &&
@@ -168,10 +176,9 @@ class App extends React.Component {
       }
       return null;
     });
-    let updateItems = { ...this.state.items };
-    updateItems = filterPics;
+    console.log(filterPics);
     this.handleTitleChange(term);
-    this.setState({ items: updateItems });
+    this.setState({ items: filterPics });
   };
 
   // handle gallery title change after search term initiated
@@ -193,7 +200,11 @@ class App extends React.Component {
   handleInputChange = event => {
     this.setState({ search: event.target.value });
   };
-
+  //leaving main page
+  leftMainPage = () => {
+    this.setState({ mainPage: false });
+    console.log(this.state.mainPage);
+  };
   // if state is loaded render components
   render() {
     return (
@@ -221,7 +232,11 @@ class App extends React.Component {
                       releatedSearch={this.handleReleatedSearch}
                       tags={this.state.items}
                     />
-                    <Gallery {...props} imgs={this.state.items} />
+                    <Gallery
+                      {...props}
+                      imgs={this.state.items}
+                      leftMain={this.leftMainPage}
+                    />
                     <Spinner loading={this.state.loading} />
                   </div>
                 </React.Fragment>

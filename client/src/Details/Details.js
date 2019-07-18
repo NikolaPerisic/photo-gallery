@@ -9,7 +9,7 @@ const Details = props => {
   // check if item matches uri path and fetch current item
   let currentItem = null;
   let path = props.location.pathname.slice(1);
-  props.data.reduce(el => {
+  props.data.map(el => {
     if (el.id === path) {
       currentItem = el;
     }

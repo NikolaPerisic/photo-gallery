@@ -2,8 +2,12 @@
   margin: 0 60px;
   padding-bottom: 1rem;
 }
+.details-content {
+  margin-top: 2rem;
+}
 @media (max-width: 768px) {
-  .main-content {
+  .main-content,
+  .details-content {
     margin: 0;
   }
 }

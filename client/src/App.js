@@ -254,7 +254,7 @@ class App extends React.Component {
                     inputSearch={this.handleSubmitSearch}
                     tagSearch={this.handleTagFilteredSearch}
                   />
-                  <div className="main-content">
+                  <div className="details-content">
                     <ErrorBoundary>
                       <Suspense fallback={<div>Loading...</div>}>
                         <Details

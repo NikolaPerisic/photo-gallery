@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import "./App.scss";
 import axios from "axios";
 import { Route, Switch } from "react-router-dom";
@@ -6,8 +6,10 @@ import Header from "./Header/Header";
 import Gallery from "./Gallery/Gallery";
 import Main from "./Main/Main";
 import ReleatedSearch from "./ReleatedSearch/ReleatedSearch";
-import Details from "./Details/Details";
+import ErrorBoundary from "./ErrorBoundary/ErrorBoundary";
 import Spinner from "./Spinner/Spinner";
+
+const Details = React.lazy(() => import("./Details/Details"));
 /**
  * Since the project is small two page site, I opted out for using default state
  * management with one class based component and a couple of functional components,
@@ -253,12 +255,16 @@ class App extends React.Component {
                     tagSearch={this.handleTagFilteredSearch}
                   />
                   <div className="main-content">
-                    <Details
-                      {...props}
-                      data={this.state.items}
-                      filterByAuthor={this.handleAuthorFilteredSearch}
-                      filterByTag={this.handleTagFilteredSearch}
-                    />
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <Details
+                          {...props}
+                          data={this.state.items}
+                          filterByAuthor={this.handleAuthorFilteredSearch}
+                          filterByTag={this.handleTagFilteredSearch}
+                        />
+                      </Suspense>
+                    </ErrorBoundary>
                   </div>
                 </React.Fragment>
               )}

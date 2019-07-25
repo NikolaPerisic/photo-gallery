@@ -107,13 +107,14 @@ class App extends React.Component {
 
   // search by tag, clear previous searches
   handleTagFilteredSearch = tag => {
+    console.log(tag);
     this.setState(
       {
         search: tag,
         tags: [],
-        galleryTitle: "All Pictures"
+        galleryTitle: `${tag} pictures`
       },
-      this.filterSearchResults()
+      this.filterSearchResults(tag)
     );
   };
   // infinite scroll
@@ -211,66 +212,69 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        {this.state.isLoaded ? (
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={props => (
-                <React.Fragment>
-                  <Header
-                    handleInputChange={this.handleInputChange}
-                    userInput={this.state.search}
-                    inputSearch={this.handleSubmitSearch}
-                    tagSearch={this.handleTagFilteredSearch}
-                  />
-                  <div className="main-content">
-                    <Main
-                      count={this.state.items.length}
-                      title={this.state.galleryTitle}
-                    />
-                    <ReleatedSearch
-                      items={this.state.tags}
-                      releatedSearch={this.handleReleatedSearch}
-                      tags={this.state.items}
-                    />
-                    <Gallery
-                      {...props}
-                      imgs={this.state.items}
-                      leftMain={this.leftMainPage}
-                    />
-                    <Spinner loading={this.state.loading} />
-                  </div>
-                </React.Fragment>
-              )}
-            />
-            <Route
-              path="/:id"
-              render={props => (
-                <React.Fragment>
-                  <Header
-                    handleInputChange={this.handleInputChange}
-                    userInput={this.state.search}
-                    inputSearch={this.handleSubmitSearch}
-                    tagSearch={this.handleTagFilteredSearch}
-                  />
-                  <div className="details-content">
-                    <ErrorBoundary>
-                      <Suspense fallback={<div>Loading...</div>}>
-                        <Details
-                          {...props}
-                          data={this.state.items}
-                          filterByAuthor={this.handleAuthorFilteredSearch}
-                          filterByTag={this.handleTagFilteredSearch}
-                        />
-                      </Suspense>
-                    </ErrorBoundary>
-                  </div>
-                </React.Fragment>
-              )}
-            />
-          </Switch>
-        ) : null}
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={props => (
+              <React.Fragment>
+                <Header
+                  handleInputChange={this.handleInputChange}
+                  userInput={this.state.search}
+                  inputSearch={this.handleSubmitSearch}
+                  tagSearch={this.handleTagFilteredSearch}
+                  freshSearch={this.fetchDataFromServer}
+                />
+                <div className="main-content">
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <Main
+                        count={this.state.items.length}
+                        title={this.state.galleryTitle}
+                      />
+                      <ReleatedSearch
+                        items={this.state.tags}
+                        releatedSearch={this.handleReleatedSearch}
+                        tags={this.state.items}
+                      />
+                      <Gallery
+                        {...props}
+                        imgs={this.state.items}
+                        leftMain={this.leftMainPage}
+                      />
+                      <Spinner loading={this.state.loading} />
+                    </Suspense>
+                  </ErrorBoundary>
+                </div>
+              </React.Fragment>
+            )}
+          />
+          <Route
+            path="/:id"
+            render={props => (
+              <React.Fragment>
+                <Header
+                  handleInputChange={this.handleInputChange}
+                  userInput={this.state.search}
+                  inputSearch={this.handleSubmitSearch}
+                  tagSearch={this.handleTagFilteredSearch}
+                />
+                <div className="details-content">
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <Details
+                        {...props}
+                        data={this.state.items}
+                        filterByAuthor={this.handleAuthorFilteredSearch}
+                        filterByTag={this.handleTagFilteredSearch}
+                      />
+                    </Suspense>
+                  </ErrorBoundary>
+                </div>
+              </React.Fragment>
+            )}
+          />
+        </Switch>
       </div>
     );
   }

@@ -18,7 +18,7 @@ const Header = props => {
     if (props.match.url !== "/") {
       return props.history.goBack();
     }
-    return null;
+    return props.freshSearch;
   };
   // handle form submit coming from details page
   const handleSubmitFromPage = e => {
